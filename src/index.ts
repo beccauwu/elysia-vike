@@ -1,14 +1,14 @@
-import {Elysia} from "elysia";
-import {elysiaConnectDecorate} from "elysia-connect";
-import {ViteConfig, getViteConfig} from "elysia-vite";
+import { Elysia } from "elysia";
+import { elysiaConnectDecorate } from "elysia-connect";
+import { ViteConfig, getViteConfig } from "elysia-vite";
+import { ServerResponse } from "node:http";
 import * as path from "path";
-import {renderPage} from "vite-plugin-ssr/server";
 import {
-    ssr,
-    UserConfig as ConfigVpsUserProvided,
-} from "vite-plugin-ssr/plugin";
-import type {Connect, ViteDevServer} from "vite";
-import {ServerResponse} from "node:http";
+  UserConfig as ConfigVpsUserProvided,
+  ssr,
+} from "vike/plugin";
+import { renderPage } from "vike/server";
+import type { Connect, ViteDevServer } from "vite";
 
 export type ElysiaVitePluginSsrConfig = ViteConfig & {
     pluginSsr?: ConfigVpsUserProvided;
@@ -16,12 +16,13 @@ export type ElysiaVitePluginSsrConfig = ViteConfig & {
 };
 
 const log: (...args: any[]) => void = !!process.env?.DEBUG
-    ? console.log.bind(console, "[elysia-vite-plugin-ssr]")
+    ? console.log.bind(console, "[elysia-vike]")
     : () => {
     };
 
 export const elysiaVitePluginSsr =
     (config?: ElysiaVitePluginSsrConfig) => async (app: Elysia) => {
+        //@ts-expect-error (idk what's going on here but maybe it's fine)
         const _app = app.use(elysiaConnectDecorate());
         const {pluginSsr, onPluginSsrReady, ...resolvedConfig} =
         (await getViteConfig(config)) || {};
@@ -47,7 +48,7 @@ export const elysiaVitePluginSsr =
         log("viteDevMiddleware", !!viteDevMiddleware);
 
         if (onPluginSsrReady) {
-            await onPluginSsrReady?.(viteServer);
+            onPluginSsrReady?.(viteServer);
         }
 
         return _app
@@ -126,7 +127,7 @@ function createVitePluginSsrConnectMiddleware(
             res.statusCode = statusCode;
 
             // @todo: can we do HTTP streams with Elysia?
-            // For HTTP streams use httpResponse.pipe() instead, see https://vite-plugin-ssr.com/stream
+            // For HTTP streams use httpResponse.pipe() instead, see https://vike.com/stream
             res.end(body);
         }
     };

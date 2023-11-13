@@ -1,9 +1,9 @@
+import react from "@vitejs/plugin-react";
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { Elysia } from "elysia";
-import { elysiaVitePluginSsr } from "../src/index";
 import * as path from "path";
-import react from "@vitejs/plugin-react";
 import type { ViteDevServer } from "vite";
+import { elysiaVike } from "../src/index";
 
 describe("elysia-vite-plugin-ssr :: v1", () => {
     let app: Elysia<any>;
@@ -12,7 +12,7 @@ describe("elysia-vite-plugin-ssr :: v1", () => {
     beforeAll(async () => {
         await new Promise((resolve) => {
             app = new Elysia().use(
-                elysiaVitePluginSsr({
+                elysiaVike({
                     pluginSsr: {},
                     base: "/ssr-v1",
                     root: path.resolve(import.meta.dir, "./v1"),
@@ -29,7 +29,7 @@ describe("elysia-vite-plugin-ssr :: v1", () => {
 
     afterAll(async () => {
         if (viteDevServer) {
-            await app.server?.stop(true);
+            app.server?.stop(true);
             await viteDevServer.close();
             console.log("v1 stopped");
         }

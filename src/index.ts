@@ -10,7 +10,7 @@ import {
 import { renderPage } from "vike/server";
 import type { Connect, ViteDevServer } from "vite";
 
-export type ElysiaVitePluginSsrConfig = ViteConfig & {
+export type ElysiaVikeConfig = ViteConfig & {
     pluginSsr?: ConfigVpsUserProvided;
     onPluginSsrReady?(viteServer: ViteDevServer): void;
 };
@@ -20,8 +20,8 @@ const log: (...args: any[]) => void = !!process.env?.DEBUG
     : () => {
     };
 
-export const elysiaVitePluginSsr =
-    (config?: ElysiaVitePluginSsrConfig) => async (app: Elysia) => {
+export const elysiaVike =
+    (config?: ElysiaVikeConfig) => async (app: Elysia) => {
         //@ts-expect-error (idk what's going on here but maybe it's fine)
         const _app = app.use(elysiaConnectDecorate());
         const {pluginSsr, onPluginSsrReady, ...resolvedConfig} =
@@ -69,7 +69,7 @@ export const elysiaVitePluginSsr =
                     })
                     .get("*", async (context) => {
                         const handled = await context.elysiaConnect(
-                            createVitePluginSsrConnectMiddleware(
+                            createVikeConnectMiddleware(
                                 resolvedConfig
                             ),
                             context
@@ -80,10 +80,10 @@ export const elysiaVitePluginSsr =
             );
     };
 
-function createVitePluginSsrConnectMiddleware(
-    config?: ElysiaVitePluginSsrConfig
+function createVikeConnectMiddleware(
+    config?: ElysiaVikeConfig
 ) {
-    return async function vitePluginSsrConnectMiddleware(
+    return async function vikeConnectMiddleware(
         req: Connect.IncomingMessage,
         res: ServerResponse,
         next: Connect.NextFunction

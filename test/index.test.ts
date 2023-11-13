@@ -1,26 +1,24 @@
+import react from "@vitejs/plugin-react";
 import {
-    afterAll,
-    afterEach,
-    beforeAll,
-    beforeEach,
-    describe,
-    expect,
-    it,
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  it
 } from "bun:test";
 import { Elysia } from "elysia";
-import { elysiaVitePluginSsr } from "../src/index";
 import * as path from "path";
-import react from "@vitejs/plugin-react";
 import type { ViteDevServer } from "vite";
+import { elysiaVike } from "../src/index";
 
-describe("elysia-vite-plugin-ssr :: current", () => {
+describe("elysia-vike :: current", () => {
     let app: Elysia<any>;
     let viteDevServer: ViteDevServer;
 
     beforeAll(async () => {
         await new Promise((resolve) => {
             app = new Elysia().use(
-                elysiaVitePluginSsr({
+                elysiaVike({
                     pluginSsr: {},
                     base: "/ssr",
                     root: path.resolve(import.meta.dir, "./current"),
@@ -40,7 +38,7 @@ describe("elysia-vite-plugin-ssr :: current", () => {
             await viteDevServer.ws.close();
             await viteDevServer.close();
         }
-        await app.server?.stop(true);
+        app.server?.stop(true);
         console.log("current :: stopped");
     });
 
@@ -57,7 +55,7 @@ describe("elysia-vite-plugin-ssr :: current", () => {
         expect(text).not.toBe("NOT_FOUND");
 
         // vite-plugin-ssr
-        expect(text.includes("vite-plugin-ssr_pageContext")).toBeTrue();
+        expect(text.includes("vike_pageContext")).toBeTrue();
 
         // navigation
         expect(text.includes("Home")).toBeTrue();

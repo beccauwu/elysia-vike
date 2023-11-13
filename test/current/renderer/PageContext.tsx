@@ -1,5 +1,5 @@
 import React from "react";
-import type {PageContextBuiltInClientWithClientRouting, PageContextBuiltIn} from 'vite-plugin-ssr/types'
+import type { PageContextBuiltInClientWithClientRouting } from 'vike/types';
 
 export type TPageContext = PageContextBuiltInClientWithClientRouting & {
     _baseServer: string
